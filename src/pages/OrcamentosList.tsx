@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, FileText, Info } from 'lucide-react';
+import { Search, FileText, Info, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -38,13 +38,22 @@ const OrcamentosList = () => {
             <Info className="h-5 w-5 text-muted-foreground" />
           </div>
           
-          <Button
-            onClick={() => navigate('/novo')}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Novo orçamento
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => navigate('/configuracoes/empresa')}
+              variant="outline"
+              size="icon"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={() => navigate('/novo')}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Novo orçamento
+            </Button>
+          </div>
         </div>
 
         {/* Search Bar */}

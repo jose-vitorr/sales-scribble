@@ -54,6 +54,10 @@ export default {
           analysis: "hsl(var(--status-analysis))",
           canceled: "hsl(var(--status-canceled))",
         },
+        "company-banner": {
+          DEFAULT: "hsl(var(--company-banner))",
+          foreground: "hsl(var(--company-banner-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

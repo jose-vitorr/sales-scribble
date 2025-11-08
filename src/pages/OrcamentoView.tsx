@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Settings, Share2, Building2 } from 'lucide-react';
+import { ArrowLeft, Settings, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
+import { EmpresaBanner } from '@/components/EmpresaBanner';
 import { getOrcamentoById, saveOrcamento } from '@/utils/localStorage';
 import { formatCurrency, formatDate } from '@/utils/calculations';
 import { Orcamento, OrcamentoStatus } from '@/types/orcamento';
@@ -123,15 +124,8 @@ const OrcamentoView = () => {
         {/* Document */}
         <div className="bg-card border border-border rounded-lg overflow-hidden shadow-lg">
           {/* Banner */}
-          <div className="bg-secondary p-6 text-secondary-foreground">
-            <div className="flex items-center gap-3">
-              <Building2 className="h-8 w-8" />
-              <div>
-                <h2 className="text-xl font-bold">Minha Empresa LTDA</h2>
-                <p className="text-sm opacity-90">CNPJ: 00.000.000/0001-00</p>
-                <p className="text-sm opacity-90">Endereço da Empresa</p>
-              </div>
-            </div>
+          <div className="p-6">
+            <EmpresaBanner showEditButton={false} />
           </div>
 
           <div className="p-6 space-y-6">

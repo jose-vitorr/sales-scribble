@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Plus, Building2, Info } from 'lucide-react';
+import { ArrowLeft, Plus, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { PriceItemCard } from '@/components/PriceItemCard';
+import { EmpresaBanner } from '@/components/EmpresaBanner';
 import { getOrcamentoById, saveOrcamento, getNextNumero } from '@/utils/localStorage';
 import { calculateSubtotal, calculateTotal, formatCurrency } from '@/utils/calculations';
 import { Orcamento, OrcamentoItem } from '@/types/orcamento';
@@ -147,17 +148,7 @@ const OrcamentoForm = () => {
         </div>
 
         {/* Banner */}
-        <div className="bg-secondary p-6 rounded-lg text-secondary-foreground relative">
-          <div className="flex items-center gap-3">
-            <Building2 className="h-8 w-8" />
-            <div>
-              <h2 className="text-xl font-bold">Minha Empresa LTDA</h2>
-              <p className="text-sm opacity-90">CNPJ: 00.000.000/0001-00</p>
-              <p className="text-sm opacity-90">Endereço da Empresa</p>
-            </div>
-          </div>
-          <Info className="absolute top-4 right-4 h-5 w-5 opacity-70" />
-        </div>
+        <EmpresaBanner showEditButton={true} />
 
         {/* Form */}
         <div className="space-y-6">
