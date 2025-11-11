@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload, Wand2, X } from 'lucide-react';
+import { ArrowLeft, Upload, X } from 'lucide-react';
 import InputMask from 'react-input-mask';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -124,30 +124,14 @@ export default function EmpresaConfig() {
                   className="hidden"
                 />
 
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  >
-                    <Upload className="w-4 h-4 mr-2" />
-                    Carregar
-                  </Button>
-                  <Button
-                    type="button"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => {
-                      toast({
-                        title: 'Em breve',
-                        description: 'Funcionalidade de criar logo em desenvolvimento',
-                      });
-                    }}
-                  >
-                    <Wand2 className="w-4 h-4 mr-2" />
-                    Criar Logo
-                  </Button>
-                </div>
+                <Button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Carregar logo
+                </Button>
               </div>
             </div>
 

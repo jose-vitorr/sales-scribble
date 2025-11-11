@@ -48,10 +48,19 @@ const OrcamentoView = () => {
     }
   };
 
-  const handleShare = () => {
+  const handleGenerateLink = () => {
+    const link = `${window.location.origin}/orcamento/${orcamento.id}`;
+    navigator.clipboard.writeText(link);
     toast({
-      title: 'Compartilhar',
-      description: 'Funcionalidade de compartilhamento em desenvolvimento.',
+      title: 'Link copiado!',
+      description: 'O link do orçamento foi copiado para a área de transferência.',
+    });
+  };
+
+  const handleSavePDF = () => {
+    toast({
+      title: 'Gerando PDF',
+      description: 'Funcionalidade de PDF em desenvolvimento.',
     });
   };
 
@@ -90,10 +99,22 @@ const OrcamentoView = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button onClick={handleShare} className="bg-primary hover:bg-primary/90">
-            <Share2 className="h-4 w-4 mr-2" />
-            Compartilhar
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/90">
+                <Share2 className="h-4 w-4 mr-2" />
+                Compartilhar
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleGenerateLink}>
+                🔗 Gerar link
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSavePDF}>
+                📄 Salvar PDF
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
