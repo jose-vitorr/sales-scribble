@@ -70,7 +70,7 @@ export const PremiumUpgradeModal = ({ open, onOpenChange, onUpgrade }: PremiumUp
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="mt-4">
           <Button
             onClick={() => {
               onUpgrade?.();
@@ -80,13 +80,6 @@ export const PremiumUpgradeModal = ({ open, onOpenChange, onUpgrade }: PremiumUp
           >
             <Crown className="h-4 w-4 mr-2" />
             Assinar Agora
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            className="w-full"
-          >
-            Continuar Amanhã
           </Button>
         </div>
       </DialogContent>
