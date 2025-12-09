@@ -1,25 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, FileText, Info, Settings } from 'lucide-react';
+import { Search, FileText, Info, Settings, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { StatusBadge } from '@/components/StatusBadge';
+import { PremiumBadge } from '@/components/PremiumBadge';
+import { PremiumUpgradeModal } from '@/components/PremiumUpgradeModal';
 import { getOrcamentos } from '@/utils/localStorage';
 import { formatDate } from '@/utils/calculations';
+import { canCreateOrcamento, getUsedQuota, DAILY_QUOTA_LIMIT, isPremiumUser } from '@/utils/quotaStorage';
 import { Orcamento } from '@/types/orcamento';
 
 const OrcamentosList = () => {
   const navigate = useNavigate();
   const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [quotaInfo, setQuotaInfo] = useState({ canCreate: true, used: 0, isPremium: false });
 
   useEffect(() => {
     loadOrcamentos();
+    updateQuotaInfo();
   }, []);
 
   const loadOrcamentos = () => {
     const data = getOrcamentos();
     setOrcamentos(data);
+  };
+
+  const updateQuotaInfo = () => {
+    setQuotaInfo({
+      canCreate: canCreateOrcamento(),
+      used: getUsedQuota(),
+      isPremium: isPremiumUser(),
+    });
+  };
+
+  const handleNewOrcamento = () => {
+    if (!quotaInfo.canCreate) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    navigate('/novo');
   };
 
   const filteredOrcamentos = orcamentos.filter(orc =>
@@ -33,12 +56,21 @@ const OrcamentosList = () => {
       <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold text-foreground">Orçamentos</h1>
             <Info className="h-5 w-5 text-muted-foreground" />
+            <PremiumBadge />
           </div>
           
           <div className="flex items-center gap-2">
+            <Button
+              onClick={() => navigate('/premium')}
+              variant="outline"
+              size="icon"
+              className="border-amber-400 text-amber-600 hover:bg-amber-50"
+            >
+              <Crown className="h-4 w-4" />
+            </Button>
             <Button
               onClick={() => navigate('/configuracoes/empresa')}
               variant="outline"
@@ -46,15 +78,39 @@ const OrcamentosList = () => {
             >
               <Settings className="h-4 w-4" />
             </Button>
-            <Button
-              onClick={() => navigate('/novo')}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Novo orçamento
-            </Button>
+            {quotaInfo.canCreate ? (
+              <Button
+                onClick={handleNewOrcamento}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Novo orçamento
+              </Button>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleNewOrcamento}
+                    className="bg-muted text-muted-foreground cursor-not-allowed"
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Novo orçamento
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Limite diário atingido. Atualize para Premium!</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         </div>
+
+        {/* Quota counter */}
+        {!quotaInfo.isPremium && (
+          <div className="text-sm text-muted-foreground">
+            {quotaInfo.used}/{DAILY_QUOTA_LIMIT} orçamentos criados hoje
+          </div>
+        )}
 
         {/* Search Bar */}
         <div className="relative">
@@ -77,7 +133,7 @@ const OrcamentosList = () => {
               </p>
               {!searchTerm && (
                 <Button
-                  onClick={() => navigate('/novo')}
+                  onClick={handleNewOrcamento}
                   variant="outline"
                   className="mt-4"
                 >
@@ -115,6 +171,12 @@ const OrcamentosList = () => {
           )}
         </div>
       </div>
+
+      <PremiumUpgradeModal
+        open={showUpgradeModal}
+        onOpenChange={setShowUpgradeModal}
+        onUpgrade={() => navigate('/premium')}
+      />
     </div>
   );
 };

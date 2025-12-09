@@ -7,6 +7,7 @@ import OrcamentosList from "./pages/OrcamentosList";
 import OrcamentoView from "./pages/OrcamentoView";
 import OrcamentoForm from "./pages/OrcamentoForm";
 import EmpresaConfig from "./pages/EmpresaConfig";
+import PremiumSettings from "./pages/PremiumSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/editar/:id" element={<OrcamentoForm />} />
           <Route path="/orcamento/:id" element={<OrcamentoView />} />
           <Route path="/configuracoes/empresa" element={<EmpresaConfig />} />
+          <Route path="/premium" element={<PremiumSettings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
