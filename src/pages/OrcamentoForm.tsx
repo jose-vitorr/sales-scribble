@@ -9,8 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { PriceItemCard } from '@/components/PriceItemCard';
 import { EmpresaBanner } from '@/components/EmpresaBanner';
+import { PremiumBadge } from '@/components/PremiumBadge';
+import { PremiumUpgradeModal } from '@/components/PremiumUpgradeModal';
 import { getOrcamentoById, saveOrcamento, getNextNumero } from '@/utils/localStorage';
 import { calculateSubtotal, calculateTotal, formatCurrency } from '@/utils/calculations';
+import { canCreateOrcamento, incrementQuotaCount } from '@/utils/quotaStorage';
 import { Orcamento, OrcamentoItem } from '@/types/orcamento';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,6 +22,7 @@ const OrcamentoForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const isEditing = Boolean(id);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const [formData, setFormData] = useState<Orcamento>({
     id: crypto.randomUUID(),
@@ -120,12 +124,24 @@ const OrcamentoForm = () => {
       return;
     }
 
+    // Check quota only for new budgets
+    if (!isEditing && !canCreateOrcamento()) {
+      setShowUpgradeModal(true);
+      return;
+    }
+
     const dataToSave = {
       ...formData,
       dataAtualizacao: new Date().toISOString(),
     };
 
     saveOrcamento(dataToSave);
+    
+    // Increment quota only for new budgets
+    if (!isEditing) {
+      incrementQuotaCount();
+    }
+
     toast({
       title: isEditing ? 'Orçamento atualizado' : 'Orçamento criado',
       description: 'Suas alterações foram salvas com sucesso.',
@@ -138,9 +154,12 @@ const OrcamentoForm = () => {
       <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">
-            {isEditing ? 'Editar Orçamento' : 'Novo Orçamento'}
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground">
+              {isEditing ? 'Editar Orçamento' : 'Novo Orçamento'}
+            </h1>
+            <PremiumBadge />
+          </div>
           <Button variant="outline" onClick={() => navigate('/')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar
@@ -382,6 +401,12 @@ const OrcamentoForm = () => {
           </Button>
         </div>
       </div>
+
+      <PremiumUpgradeModal
+        open={showUpgradeModal}
+        onOpenChange={setShowUpgradeModal}
+        onUpgrade={() => navigate('/premium')}
+      />
     </div>
   );
 };
